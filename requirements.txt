@@ -1,13 +1,19 @@
-langgraph
-langchain
-langchain-core
-langchain-groq
-langchain-huggingface
-langchain-pinecone
-langchain-community
-langchain-text-splitters
-langchain-tavily
-pinecone
-sentence-transformers
-beautifulsoup4
-python-dotenv
+langgraph = 1.2.18
+langchain =  1.4.7
+langchain-core = 1.7.0
+langchain-groq = 1.1.3
+langchain-huggingface = 1.2.3
+langchain-pinecone = 0.2.13
+langchain-community = 0.4.2
+langchain-text-splitters = 1.1.3
+langchain-tavily = 0.2.18
+pinecone = 7.3.0
+sentence-transformers = 6.2.0
+beautifulsoup4 = 4.12.3
+python-dotenv = 1.2.4
+
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+jinja2==3.1.6
+python-multipart==0.0.20
+pydantic-settings==2.10.1

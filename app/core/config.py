@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     openai_api_key: str = ""
     groq_api_key: str= ""
-    groq_model: str = "llama-3.3-70b-versatile"
+    groq_model: str = "openai/gpt-oss-120b"
     tavily_api_key: str = ""
     pinecone_api_key: str = ""
     pinecone_index_name: str = "fde-it-support-rag"

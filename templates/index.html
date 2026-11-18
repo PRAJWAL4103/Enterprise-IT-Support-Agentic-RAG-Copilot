@@ -4,31 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ app_name }}</title>
-    <link rel="stylesheet" href="/static/css/style.css?v=3" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css?v=4" />
 </head>
 <body>
 
 <div class="app-shell">
 
-    <!-- ── LEFT SIDEBAR ───────────────────────────────── -->
+    <!-- LEFT SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-inner">
 
-            <!-- Logo -->
             <div class="app-logo">
                 <div class="logo-mark">IT</div>
                 <span class="logo-name">IT Copilot</span>
             </div>
 
-            <!-- Search -->
+            <div class="user-card">
+                <div class="user-avatar">U</div>
+                <div class="user-info">
+                    <div class="user-name">IT User</div>
+                    <div class="user-role">Employee</div>
+                </div>
+                <a href="/logout" class="logout-icon" title="Logout">
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </a>
+            </div>
+
             <div class="search-bar">
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                 <input type="text" placeholder="Search for chats..." />
             </div>
 
-            <!-- Nav -->
             <div class="nav-section">
-                <div class="nav-label">FEATURES</div>
+                <div class="nav-label">Features</div>
                 <a class="nav-item">
                     <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     Dashboard
@@ -47,9 +58,8 @@
                 </a>
             </div>
 
-            <!-- Chat History -->
             <div class="nav-section history-section">
-                <div class="nav-label">CHAT HISTORY</div>
+                <div class="nav-label">Chat history</div>
                 <div class="history-item">How do I reset my VPN password?</div>
                 <div class="history-item">MFA setup on new device</div>
                 <div class="history-item">Laptop not connecting to Wi-Fi</div>
@@ -58,27 +68,21 @@
             </div>
         </div>
 
-        <!-- Sidebar Bottom -->
         <div class="sidebar-footer">
-            <div class="user-card">
-                <div class="user-avatar">U</div>
-                <div class="user-info">
-                    <div class="user-name">IT User</div>
-                    <div class="user-role">Employee</div>
-                </div>
-                <a href="/logout" class="logout-icon" title="Logout">
-                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                </a>
+            <div class="promo-card">
+                <strong>Grow the knowledge base</strong>
+                <p>Add policies and how-to guides so answers stay grounded in your docs.</p>
+                <button type="button" class="promo-btn" id="openUpload3">Upload a document</button>
             </div>
         </div>
     </aside>
 
-    <!-- ── MAIN CHAT AREA ──────────────────────────────── -->
+    <!-- MAIN CHAT AREA -->
     <main class="main-area">
         <header class="chat-header">
             <div>
                 <h2>Chat with IT Copilot</h2>
-                <p class="header-sub">Enterprise IT Support · Private KB first · Web fallback when evidence is weak</p>
+                <p class="header-sub">Enterprise IT support. Private KB first, web fallback when evidence is weak.</p>
             </div>
             <div class="header-actions">
                 <span class="pill">Agentic RAG</span>
@@ -86,68 +90,65 @@
             </div>
         </header>
 
-        <!-- Messages -->
-        <section id="chat" class="chat-messages">
-            <div class="message assistant">
-                <div class="avatar">AI</div>
-                <div class="bubble">
-                    <strong>How can I help with IT support today?</strong>
-                    <p>Try asking about VPN, password reset, MFA, software access, or any technical issue. I'll search our private knowledge base first, and fall back to the web if needed.</p>
+        <div class="chat-panel">
+            <section id="chat" class="chat-messages">
+                <div class="message assistant">
+                    <div class="avatar">AI</div>
+                    <div class="bubble">
+                        <strong>How can I help with IT support today?</strong>
+                        <p>Try asking about VPN, password reset, MFA, software access, or any technical issue. I'll search our private knowledge base first, and fall back to the web if needed.</p>
+                    </div>
                 </div>
+            </section>
+
+            <div class="example-chips">
+                <button class="chip example">How do I connect to the company VPN?</button>
+                <button class="chip example">What is our password reset policy?</button>
+                <button class="chip example">Latest Microsoft Teams outage guidance?</button>
             </div>
-        </section>
 
-        <!-- Example chips -->
-        <div class="example-chips">
-            <button class="chip example">How do I connect to the company VPN?</button>
-            <button class="chip example">What is our password reset policy?</button>
-            <button class="chip example">Latest Microsoft Teams outage guidance?</button>
-        </div>
-
-        <!-- Input -->
-        <div class="input-wrap">
-            <form id="chatForm" class="input-bar">
-                <button type="button" class="icon-btn" id="openUpload2" title="Upload document">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                </button>
-                <button type="button" class="icon-btn" title="Web search enabled">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                </button>
-                <textarea id="question" rows="1" placeholder="Write your IT support request..." required></textarea>
-                <button type="submit" class="send-btn">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>
-            </form>
-            <p class="disclaimer">AI may display inaccurate information. Verify all critical IT changes with your IT team.</p>
+            <div class="input-wrap">
+                <form id="chatForm" class="input-bar">
+                    <button type="button" class="icon-btn" id="openUpload2" title="Upload document">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                    </button>
+                    <button type="button" class="icon-btn" title="Web search enabled">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </button>
+                    <span class="divider"></span>
+                    <textarea id="question" rows="1" placeholder="Write your IT support request..." required></textarea>
+                    <button type="submit" class="send-btn" title="Send">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                </form>
+                <p class="disclaimer">AI may display inaccurate information. Verify all critical IT changes with your IT team.</p>
+            </div>
         </div>
     </main>
 
-    <!-- ── RIGHT PANEL ────────────────────────────────── -->
+    <!-- RIGHT PANEL -->
     <aside class="right-panel">
         <div class="panel-header">
             <h3>AI Module</h3>
-            <div class="version-badge">⚡ Agentic RAG</div>
+            <div class="version-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg>Agentic RAG</div>
         </div>
 
-        <!-- Tabs -->
         <div class="panel-tabs">
-            <button class="tab-btn active" data-tab="trace">TRACE</button>
-            <button class="tab-btn" data-tab="tools">TOOLS</button>
+            <button class="tab-btn active" data-tab="trace">Trace</button>
+            <button class="tab-btn" data-tab="tools">Tools</button>
         </div>
 
-        <!-- Trace Tab -->
         <div class="tab-content" id="tab-trace">
             <p class="panel-desc">Watch LangGraph decisions run in real time.</p>
             <div id="trace" class="trace-list">
                 <div class="empty">No request yet.</div>
             </div>
             <div class="source-box">
-                <span class="source-label">FINAL SOURCE</span>
+                <span class="source-label">Final source</span>
                 <strong id="sourceUsed">—</strong>
             </div>
         </div>
 
-        <!-- Tools Tab -->
         <div class="tab-content hidden" id="tab-tools">
             <p class="panel-desc">Integrated tools used by the agent.</p>
             <div class="tool-list">
@@ -160,7 +161,7 @@
                     <span class="tool-status on"></span>
                 </div>
                 <div class="tool-item">
-                    <div class="tool-icon web">🌐</div>
+                    <div class="tool-icon web">WEB</div>
                     <div class="tool-info">
                         <div class="tool-name">Tavily Web Search</div>
                         <div class="tool-desc">Fallback when KB is weak</div>
@@ -179,14 +180,14 @@
                     <div class="tool-icon emb">EM</div>
                     <div class="tool-info">
                         <div class="tool-name">HuggingFace Embeddings</div>
-                        <div class="tool-desc">all-MiniLM-L6-v2 · local</div>
+                        <div class="tool-desc">all-MiniLM-L6-v2, local</div>
                     </div>
                     <span class="tool-status on"></span>
                 </div>
             </div>
 
             <div class="workflow-steps">
-                <div class="steps-label">LANGGRAPH WORKFLOW</div>
+                <div class="steps-label">LangGraph workflow</div>
                 <div class="step-item">1. Route question</div>
                 <div class="step-item">2. Retrieve private KB</div>
                 <div class="step-item">3. Grade evidence</div>
@@ -198,12 +199,12 @@
     </aside>
 </div>
 
-<!-- ── UPLOAD MODAL ───────────────────────────────── -->
+<!-- UPLOAD MODAL -->
 <div id="uploadModal" class="modal hidden">
     <div class="modal-card">
         <div class="modal-head">
             <h3>Ingest Company Document</h3>
-            <button id="closeUpload">×</button>
+            <button id="closeUpload" aria-label="Close">×</button>
         </div>
         <p class="modal-desc">Upload PDF, TXT, Markdown, or DOCX. Chunked, embedded, and indexed into Pinecone.</p>
         <input id="adminKey" type="password" placeholder="Admin API key" />
@@ -213,7 +214,7 @@
     </div>
 </div>
 
-<script src="/static/js/app.js?v=3"></script>
+<script src="/static/js/app.js?v=4"></script>
 <script>
 // Tab switching
 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -224,8 +225,10 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
     });
 });
-// Second upload trigger
-document.getElementById('openUpload2').onclick = () => document.getElementById('uploadModal').classList.remove('hidden');
+// Extra upload triggers
+['openUpload2', 'openUpload3'].forEach(id => {
+    document.getElementById(id).onclick = () => document.getElementById('uploadModal').classList.remove('hidden');
+});
 // Auto-resize textarea
 const ta = document.getElementById('question');
 ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 140) + 'px'; });

@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     top_k: int = 4
     max_retries: int = 1
     admin_api_key: str = "change-me"
+    app_password: str = "changeme"
+    session_secret: str = "change-this-secret"
+    session_expire_hours: int = 8
     audit_db_path: str = str(BASE_DIR / "data" / "audit.db")
     upload_dir: str = str(BASE_DIR / "uploads")
     sample_kb_dir: str = str(BASE_DIR / "data" / "sample_kb")

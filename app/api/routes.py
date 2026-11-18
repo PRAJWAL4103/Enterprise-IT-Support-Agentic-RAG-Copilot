@@ -1,7 +1,8 @@
 from pathlib import Path
-from fastapi import APIRouter, UploadFile, File, HTTPException, Header
+from fastapi import APIRouter, UploadFile, File, HTTPException, Header, Depends, Request
 from pydantic import BaseModel, Field
 from app.core.config import get_settings
+from app.core.auth import require_login
 from app.rag.workflow import ask
 from app.rag.vectorstore import add_documents
 from app.services.ingestion import load_file, chunk_documents, SUPPORTED
@@ -18,7 +19,7 @@ def health():
     return {"status": "ok", "service": settings.app_name}
 
 @router.post("/chat")
-def chat(payload: ChatRequest):
+def chat(payload: ChatRequest, _: bool = Depends(require_login)):
     try:
         result = ask(payload.question)
         write_audit(payload.question, result["source_used"], result.get("trace", []))
@@ -36,7 +37,7 @@ def chat(payload: ChatRequest):
 
 
 @router.post("/ingest")
-async def ingest(file: UploadFile = File(...), x_admin_key: str = Header(default="")):
+async def ingest(file: UploadFile = File(...), x_admin_key: str = Header(default=""), _: bool = Depends(require_login)):
     if x_admin_key != settings.admin_api_key:
         raise HTTPException(status_code=401, detail="Invalid admin key")
     suffix = Path(file.filename or "").suffix.lower()

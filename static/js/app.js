@@ -19,16 +19,50 @@ function renderTrace(items = []) {
     trace.innerHTML = items.length ? items.map(x => `<div class="trace-item">${escapeHtml(x)}</div>`).join('') : '<div class="empty">No trace.</div>';
 }
 
+function showLoader() {
+    const wrap = document.createElement('div');
+    wrap.className = 'message assistant loader-msg';
+    wrap.id = 'activeLoader';
+    wrap.innerHTML = `
+        <div class="avatar">AI</div>
+        <div class="bubble loader-bubble">
+            <div class="loader-box">
+                <div class="loader">
+                    <div class="inner one"></div>
+                    <div class="inner two"></div>
+                    <div class="inner three"></div>
+                </div>
+            </div>
+            <span class="loader-text">Analyzing & retrieving knowledge...</span>
+        </div>
+    `;
+    chat.appendChild(wrap);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function hideLoader() {
+    const el = document.getElementById('activeLoader');
+    if (el) el.remove();
+}
+
 async function askAgent(q) {
     addMessage('user', q); question.value = ''; question.style.height = 'auto';
     renderTrace(['Running LangGraph workflow...']); sourceUsed.textContent = 'Running';
     sendBtn.disabled = true;
+    showLoader();
     try {
         const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: q }) });
         const data = await res.json(); if (!res.ok) throw new Error(data.detail || 'Request failed');
+        hideLoader();
         addMessage('assistant', data.answer, data.source_used, data.citations || []); renderTrace(data.trace || []); sourceUsed.textContent = data.source_used;
-    } catch (e) { addMessage('assistant', `Error: ${e.message}`); renderTrace(['Request failed']); sourceUsed.textContent = 'Error'; }
-    finally { sendBtn.disabled = false; }
+    } catch (e) {
+        hideLoader();
+        addMessage('assistant', `Error: ${e.message}`); renderTrace(['Request failed']); sourceUsed.textContent = 'Error';
+    }
+    finally {
+        hideLoader();
+        sendBtn.disabled = false;
+    }
 }
 
 form.addEventListener('submit', e => { e.preventDefault(); const q = question.value.trim(); if (q) askAgent(q); });

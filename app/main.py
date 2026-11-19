@@ -29,7 +29,7 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 async def auth_middleware(request: Request, call_next):
     """Redirect unauthenticated users to /login for all page routes."""
     # Paths that never require auth
-    public_paths = {"/login", "/static"}
+    public_paths = {"/login", "/static", "/preview"}
     path = request.url.path
 
     # Allow static files and login page always
@@ -53,3 +53,12 @@ def home(request: Request):
         name="index.html",
         context={"app_name": settings.app_name}
     )
+
+@app.get("/preview", response_class=HTMLResponse)
+def preview(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={"app_name": settings.app_name}
+    )
+

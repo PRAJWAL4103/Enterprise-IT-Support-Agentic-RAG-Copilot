@@ -1,105 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login — IT Support Copilot</title>
+    <title>Sign In — {{ app_name | default("IT Support Copilot") }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
-            background:
-                radial-gradient(700px 420px at 80% -10%, rgba(94,226,107,.14), transparent 60%),
-                radial-gradient(600px 420px at 0% 110%, rgba(94,226,107,.09), transparent 60%),
-                #060907;
-            color: #eef2ee;
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-            -webkit-font-smoothing: antialiased;
-        }
-        .login-card {
-            width: min(420px, 92vw);
-            background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 24px;
-            padding: 40px 36px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 40px 100px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.07);
-        }
-        .brand-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            font-size: 12px; font-weight: 600; color: #5ee26b;
-            background: rgba(94,226,107,.12);
-            border: 1px solid rgba(94,226,107,.3);
-            padding: 6px 12px; border-radius: 999px; margin-bottom: 24px;
-        }
-        .brand-badge::before {
-            content: ""; width: 6px; height: 6px; border-radius: 50%;
-            background: #5ee26b; box-shadow: 0 0 8px #5ee26b;
-        }
-        h1 { font-size: 28px; line-height: 1.15; letter-spacing: -.02em; font-weight: 600; margin-bottom: 8px; }
-        .muted { color: #8a948c; font-size: 14px; line-height: 1.55; margin-bottom: 30px; }
-        label { display: block; font-size: 13px; color: #8a948c; margin-bottom: 8px; }
-        input[type="password"] {
-            width: 100%;
-            background: rgba(0,0,0,.45);
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 12px;
-            color: #eef2ee; font: inherit; font-size: 15px;
-            padding: 13px 15px; outline: none;
-            transition: border-color .2s, box-shadow .2s;
-        }
-        input[type="password"]::placeholder { color: #5a625c; }
-        input[type="password"]:focus {
-            border-color: rgba(94,226,107,.55);
-            box-shadow: 0 0 0 4px rgba(94,226,107,.08);
-        }
-        .error-msg {
-            margin-top: 10px; font-size: 13px; color: #ffb4b4;
-            background: rgba(255,90,90,.08);
-            border: 1px solid rgba(255,90,90,.3);
-            border-radius: 10px; padding: 10px 12px;
-        }
-        button[type="submit"] {
-            margin-top: 20px; width: 100%; border: none; cursor: pointer;
-            background: linear-gradient(145deg, #6ff07b, #2f9e3f);
-            color: #04120a; font: inherit; font-weight: 600; font-size: 15px;
-            border-radius: 12px; padding: 14px;
-            box-shadow: 0 8px 26px rgba(94,226,107,.28), inset 0 1px 0 rgba(255,255,255,.35);
-            transition: transform .15s, filter .15s;
-        }
-        button[type="submit"]:hover { transform: translateY(-1px); filter: brightness(1.08); }
-        :focus-visible { outline: 2px solid #5ee26b; outline-offset: 2px; }
-        .footer-note { margin-top: 22px; text-align: center; font-size: 12px; color: #5a625c; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css?v=14" />
+    <script>
+        // Synchronously initialize theme to avoid flash
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const urlTheme = params.get('theme');
+            const saved = urlTheme || localStorage.getItem('it_copilot_theme');
+            if (saved === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            } else if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
 </head>
 <body>
-    <div class="login-card">
-        <div class="brand-badge">FDE Project</div>
-        <h1>IT Support<br>Agentic RAG</h1>
-        <p class="muted">Enter your access password to continue.</p>
 
-        <form method="post" action="/login">
-            <label for="password">Password</label>
-            <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter password..."
-                autofocus
-                required
-            />
-            {% if error %}
-            <div class="error-msg">{{ error }}</div>
-            {% endif %}
-            <button type="submit">Sign in</button>
+<!-- Halftone Grid & Noise Overlays -->
+<div class="halftone-overlay" aria-hidden="true"></div>
+<div class="noise-overlay" aria-hidden="true"></div>
+
+<div class="login-page-wrap">
+    <!-- Top-Right Theme Toggle -->
+    <header class="login-topbar">
+        <button type="button" class="theme-toggle-btn" id="themeToggle" aria-label="Toggle light or dark theme" title="Toggle theme">
+            <!-- Sun icon (shown in dark mode) -->
+            <svg class="icon-sun" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <!-- Moon icon (shown in light mode) -->
+            <svg class="icon-moon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+    </header>
+
+    <!-- Centered Login Card -->
+    <main class="login-card {% if error %}has-error{% endif %}">
+        <!-- Rounded-square glass logo tile -->
+        <div class="login-logo-tile" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+            </svg>
+        </div>
+
+        <h1>Welcome Back</h1>
+        <p class="login-subtitle">Sign in to continue to IT Copilot</p>
+
+        {% if error %}
+        <div class="error-msg" role="alert">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <form class="login-form" method="post" action="/login" id="loginForm">
+            <div class="field-group">
+                <label for="password">Password</label>
+                <div class="password-input-wrap">
+                    <svg class="lock-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter your access password..."
+                        autocomplete="current-password"
+                        required
+                        autofocus
+                    />
+                    <button type="button" class="eye-toggle-btn" id="eyeToggle" aria-label="Toggle password visibility" title="Show/Hide password">
+                        <!-- Eye icon -->
+                        <svg class="eye-open" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        <!-- Eye-off icon -->
+                        <svg class="eye-closed" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="neo-btn-primary login-submit-btn" id="submitBtn">
+                <span class="btn-text">Login</span>
+                <div class="arrow-chip" id="btnChip">
+                    <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                    <div class="orbit-spinner" aria-hidden="true">
+                        <div class="inner one"></div>
+                        <div class="inner two"></div>
+                        <div class="inner three"></div>
+                    </div>
+                </div>
+            </button>
         </form>
 
-        <p class="footer-note">Enterprise Knowledge Copilot · Agentic RAG</p>
-    </div>
+        <footer class="login-footer">
+            Enterprise Knowledge Copilot · Agentic RAG
+        </footer>
+    </main>
+</div>
+
+<script>
+    // Theme Switcher for Login
+    const themeBtn = document.getElementById('themeToggle');
+    const sunIcon = themeBtn.querySelector('.icon-sun');
+    const moonIcon = themeBtn.querySelector('.icon-moon');
+
+    function syncThemeIcons() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        } else {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        }
+    }
+    syncThemeIcons();
+
+    themeBtn.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('it_copilot_theme', next);
+        syncThemeIcons();
+    });
+
+    // Eye toggle for password visibility
+    const passwordInput = document.getElementById('password');
+    const eyeToggle = document.getElementById('eyeToggle');
+    const eyeOpen = eyeToggle.querySelector('.eye-open');
+    const eyeClosed = eyeToggle.querySelector('.eye-closed');
+
+    eyeToggle.addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeOpen.style.display = 'none';
+            eyeClosed.style.display = 'block';
+        } else {
+            passwordInput.type = 'password';
+            eyeOpen.style.display = 'block';
+            eyeClosed.style.display = 'none';
+        }
+        passwordInput.focus();
+    });
+
+    // Form submit loading state and animations
+    const loginForm = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loginCard = document.querySelector('.login-card');
+    const btnText = submitBtn.querySelector('.btn-text');
+
+    // Tactile click ripple effect
+    submitBtn.addEventListener('click', (e) => {
+        const rect = submitBtn.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'btn-ripple';
+        const size = Math.max(rect.width, rect.height) * 1.6;
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+        ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+        submitBtn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    });
+
+    let isSubmitting = false;
+    loginForm.addEventListener('submit', (e) => {
+        if (isSubmitting) return;
+        e.preventDefault();
+        isSubmitting = true;
+
+        // Trigger animations immediately
+        submitBtn.classList.add('is-submitting');
+        if (loginCard) loginCard.classList.add('is-authenticating');
+        if (btnText) btnText.textContent = 'Authenticating...';
+
+        // Brief delay allowing the glowing 3D gyroscope & border-beam animation to play smoothly
+        setTimeout(() => {
+            loginForm.submit();
+        }, 550);
+    });
+</script>
 </body>
 </html>
